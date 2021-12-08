@@ -9,6 +9,8 @@ import (
 func main() {
 	router := gin.Default()
 	router.GET("/albums", getAlbums)
+	router.POST("/albums", addAlbum)
+
 	router.Run("localhost:8080")
 
 }
@@ -29,3 +31,18 @@ var albums = []album{
 func getAlbums(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, albums)
 }
+
+func addAlbum(c *gin.Context) {
+	var newAlbum album
+
+	//Use Context.BindJSON to bind the request body to newAlbum.
+	if err := c.BindJSON(&newAlbum); err != nil {
+		return
+	}
+	albums = append(albums, newAlbum)
+	c.IndentedJSON(http.StatusCreated, albums)
+}
+
+//Append the album struct initialized from the JSON to the albums slice.
+
+//Add a 201 status code to the response, along with JSON representing the album you added.
